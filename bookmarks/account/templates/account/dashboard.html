@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Рабочий стол{% endblock %}
+
+{% block content %}
+<h1>Рабочий стол</h1>
+{% with total_images_created=request.user.images_created.count %}
+<p>Добро пожаловать на ваш рабочий стол. Вы добавили в закладки {{ total_images_created }} image{{ total_images_created|pluralize }}.</p>
+{% endwith %}
+
+<p>Перетащите следующую кнопку на панель закладок, чтобы добавить изображения с других веб-сайтов в закладки → <a href="javascript:{% include "bookmarklet_launcher.js" %}" class="button">Добавить в закладки</a>
+<p>
+
+<p>Добро пожаловать на рабочий стол.
+    Вы можете <a href="{% url "edit" %}">редактировать свой профиль</a> или <a href="{% url "password_change" %}">сменить свой пароль</a>.
+</p>
+ <h2>Что происходит</h2>
+  <div id="action-list">
+      {% include "actions/action/detail.html" %}
+{% endblock %}
+
+{% block domready %}
+  var page = 1;
+  var empty_page = false;
+  var block_request = false;
+
+  $(window).scroll(function() {
+    var margin = $(document).height() - $(window).height() - 200;
+    if  ($(window).scrollTop() > margin && empty_page == false && block_request == false) {
+     block_request = true;
+      page += 1;
+      $.get('?page=' + page, function(data) {
+       if(data == '') {
+          empty_page = true;
+        }
+        else {
+          block_request = false;
+          $('#action-list').append(data);
+        }
+      });
+    }
+  });
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<h1>Вход</h1>
+{% if form.errors %}
+<p>Ваше имя пользователя и пароль не совпадают. Повторите попытку.</p>
+{% else %}
+<p>Пожалуйста, используйте следующую форму для входа. Если у вас нет учетной записи <a href="{% url "register" %}">зарегистрируйтесь</a></p>
+{% endif %}
+<div class="login-form">
+    <form action="{% url 'login' %}" method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}" />
+        <p><input type="submit" value="Вход"></p>
+    </form>
+    <p><a href="{% url "password_reset" %}">Забыли свой пароль?</a></p>
+</div>
+<div class="social">
+    <ul>
+        {# <li class="facebook"><a href="{% url "social:begin" "facebook" %}">Sign in with Facebook</a></li> #}
+        {# <li class="twitter"><a href="{% url "social:begin" "twitter" %}">Login with Twitter</a></li> #}
+        <li class="google"><a href="{% url "social:begin" "google-oauth2" %}">Войти через Google</a></li>
+        <li class="github"><a href="{% url "social:begin" "github" %}">Войти через GitHub</a></li>
+        <li class="vk"><a href="{% url "social:begin" "vk-oauth2" %}">Войти через VK</a></li>
+    </ul>
+</div>
+{% endblock %}
